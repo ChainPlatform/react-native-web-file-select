@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>File Select</title>
+    <meta name="author" content="santran686@gmail.com">
+    <meta name="author" content="chainplatform.net">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            margin: 0px;
+            width: 100%
+        }
+
+        button {
+            background: red;
+            border-width: 0px;
+            color: white;
+            padding: 8px 15px;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="button" onclick="document.getElementById('upload').click();">Open</button>
+    <input type='file' id="upload" style="display: none;" onchange="readURL(this)" />
+    <script>
+        const parsedUrl = new URL(window.location.href), style_button = parsedUrl.searchParams.get("style_button"), file_text = parsedUrl.searchParams.get("file_text"), file_types = parsedUrl.searchParams.get("file_types");
+        let button = document.getElementById("button");
+        let input = document.getElementById("upload");
+        if (style_button != "") {
+            button.style = style_button;
+        }
+        if (file_text == "") {
+            file_text = "Open";
+        }
+        button.setAttribute('content', file_text);
+        button.textContent = file_text;
+        if (style_button != "") {
+            input.accept = file_types;
+        }
+        function readURL(input) {
+            var url = input.value;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.readAsDataURL(input.files[0]);
+                reader.onload = function (e) {
+                    var url = input.value;
+                    var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+                    var filename = input.files[0].name;
+                    let result = { filename: filename, isFile: true, ext: ext, datas: e.target.result };
+                    (window.ReactNativeWebView || window.parent || window).postMessage(JSON.stringify(result), '*');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
