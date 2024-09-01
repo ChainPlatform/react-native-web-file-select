@@ -7,7 +7,7 @@ import { DEFAULT_USER_AGENT, DEFAULT_URL } from '../helpers';
 export default class FileSelect extends Component {
     constructor(props) {
         super(props);
-        this.webPaymentRef = createRef(null);
+        this.webFileRef = createRef(null);
     }
 
     getContent() {
@@ -27,7 +27,7 @@ export default class FileSelect extends Component {
         const content = this.getContent();
         return (
             <WebView
-                ref={this.webPaymentRef}
+                ref={this.webFileRef}
                 scalesPageToFit={true}
                 overScrollMode={"never"}
                 nestedScrollEnabled={true}
@@ -51,7 +51,13 @@ export default class FileSelect extends Component {
                         const datas = JSON.parse(event.nativeEvent.data);
                         if (typeof this.props.getFile != "undefined") {
                             if (typeof datas.isFile != "undefined") {
-                                this.props.getFile(datas);
+                                this.props.getFile(datas.datas);
+                                return;
+                            }
+                        }
+                        if (typeof this.props.uploadResult != "undefined") {
+                            if (typeof datas.uploadResult != "undefined") {
+                                this.props.uploadResult(datas);
                                 return;
                             }
                         }
@@ -62,5 +68,11 @@ export default class FileSelect extends Component {
                 }}
             />
         );
+    }
+
+    uploadFile(datas) {
+        if (this.webFileRef && this.webFileRef.current) {
+            this.webFileRef.current.postMessage(JSON.stringify({ event: "uploadFile", data: datas }), '*');
+        }
     }
 };

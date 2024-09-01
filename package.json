@@ -1,6 +1,6 @@
 {
   "name": "@chainplatform/file",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The library allows you to select file with react-native without ejecting support both react-native and react-native-web.",
   "main": "index.js",
   "devDependencies": {
