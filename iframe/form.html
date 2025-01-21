@@ -64,8 +64,18 @@
                     var url = input.value;
                     var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
                     var filename = input.files[0].name;
-                    let result = { isFile: true, datas: { filename: filename, ext: ext, datas: e.target.result } };
-                    (window.ReactNativeWebView || window.parent || window).postMessage(JSON.stringify(result), '*');
+                    if (url.includes("image")) {
+                        var image = new Image();
+                        image.src = e.target.result;
+                        image.onload = function () {
+                            let ratio = this.width / this.height;
+                            let result = { isFile: true, datas: { filename: filename, ext: ext, metas: { width: this.width, height: this.height, ratio: ratio }, datas: e.target.result } };
+                            (window.ReactNativeWebView || window.parent || window).postMessage(JSON.stringify(result), '*');
+                        };
+                    } else {
+                        let result = { isFile: true, datas: { filename: filename, ext: ext, metas: { width: 0, height: 0, ratio: 0 }, datas: e.target.result } };
+                        (window.ReactNativeWebView || window.parent || window).postMessage(JSON.stringify(result), '*');
+                    }
                 }
                 reader.readAsDataURL(input.files[0]);
             }
