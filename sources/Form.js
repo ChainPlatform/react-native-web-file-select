@@ -47,7 +47,7 @@ export function formHTML(file_types = "", file_text = "", style_button = "") {
                                 var url = input.value;
                                 var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
                                 var filename = input.files[0].name;
-                                if (url.includes("image")) {
+                                if (e.target.result.includes("image")) {
                                     var image = new Image();
                                     image.src = e.target.result;
                                     image.onload = function () {
